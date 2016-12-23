@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ZammadDatabaseUpdate
 {
@@ -37,14 +28,19 @@ namespace ZammadDatabaseUpdate
             request.Headers["Authorization"] = "Basic " + authInfo;
 
             // Web Response
-            try
-            {
+            //try
+            //{
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 StreamReader stream = new StreamReader(response.GetResponseStream());
                 Result.Text += "\r\n"+stream.ReadToEnd();
                 stream.Close();
-            }
-            catch (Exception ex) { Result.Text += "\r\n"+ex.Message; }
+                /*DataContractJsonSerializer json = new DataContractJsonSerializer(typeof(List<User>));
+                List<User> jsonResponse = (List<User>)json.ReadObject(response.GetResponseStream());
+            foreach(User user in jsonResponse)
+                Result.Text += "\r\n" + user.id;*/
+                response.Close();
+            //}
+            //catch (Exception ex) { Result.Text += "\r\n"+ex.Message; }
         }
 
         private void btn_Upload_Click(object sender, RoutedEventArgs e)
@@ -74,14 +70,22 @@ namespace ZammadDatabaseUpdate
             }
 
             // Web Response
+            HttpWebResponse response = null;
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                response = (HttpWebResponse)request.GetResponse();
                 StreamReader stream = new StreamReader(response.GetResponseStream());
                 Result.Text += "\r\n" + stream.ReadToEnd();
                 stream.Close();
+                response.Close();
             }
-            catch (Exception ex) { Result.Text += "\r\n" + ex.Message; }
+            catch (Exception ex) { Result.Text += "\r\n" + ex.Message; if (response != null) response.Close(); }
+        }
+
+        private void btn_updateBob_Click(object sender, RoutedEventArgs e)
+        {
+            ReadExcelDB();
+            UserUpdate();
         }
     }
 }
