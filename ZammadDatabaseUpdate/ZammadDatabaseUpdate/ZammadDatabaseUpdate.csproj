@@ -57,6 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="MainWindow.xaml.Excel.cs" />
+    <Compile Include="MainWindow.xaml.Logfile.cs" />
     <Compile Include="MainWindow.xaml.ZammadUpdate.cs" />
     <Compile Include="User.cs" />
     <Page Include="MainWindow.xaml">

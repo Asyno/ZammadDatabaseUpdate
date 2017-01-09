@@ -29,6 +29,7 @@ namespace ZammadDatabaseUpdate
                     {
                         isDouble = true;
                         user.id = ZammadUser.id;
+                        break;
                     }
                 }
                 Debug.WriteLine("__ Upload __");
@@ -90,12 +91,14 @@ namespace ZammadDatabaseUpdate
                 string json = "{" +
                     "\"firstname\": \""+user.firstname+"\"," +
                     "\"lastname\": \""+user.lastname+"\"," +
-                    "\"support_level\": \""+user.support_level+"\"," +
+                    "\"email\": \"" + user.firstname.Replace(' ', '_') + "@" + user.firstname.Replace(' ', '_') + ".com\"," +
+                    "\"support_level\": \"" +user.support_level+"\"," +
                     "\"support\": \""+user.support+"\"" +
                     "}";
                 data.Write(json);
                 data.Flush();
                 data.Close();
+                WriteLog("   - Update: " + user.firstname + " - " + user.lastname);
             }
 
             // Web Response
@@ -104,11 +107,12 @@ namespace ZammadDatabaseUpdate
             {
                 response = (HttpWebResponse)request.GetResponse();
                 StreamReader stream = new StreamReader(response.GetResponseStream());
-                Result.Text += "\r\n" + stream.ReadToEnd();
+                WriteLog(stream.ReadToEnd());
                 stream.Close();
                 response.Close();
             }
-            catch (Exception ex) { Result.Text += "\r\n" + ex.Message; if (response != null) response.Close(); }
+            catch (Exception ex) { WriteLog("Error: " + user.firstname + " - " + user.lastname + " - " + ex.Message + "\r\n   - " + user.support_level + " - " + user.support);
+                if (response != null) response.Close(); }
         }
 
         /// <summary>
@@ -130,7 +134,7 @@ namespace ZammadDatabaseUpdate
                 string json = "{" +
                     "\"firstname\": \"" + user.firstname + "\"," +
                     "\"lastname\": \"" + user.lastname + "\"," +
-                    "\"email\": \"" + user.lastname.Replace(' ', '_') + "@example.com\"," +
+                    "\"email\": \"" + user.firstname.Replace(' ', '_') + "@"+ user.firstname.Replace(' ', '_')  + ".com\"," +
                     "\"support_level\": \"" + user.support_level + "\"," +
                     "\"support\": \"" + user.support + "\"," +
                     "\"active\": \"true\"," +
@@ -139,6 +143,7 @@ namespace ZammadDatabaseUpdate
                 data.Write(json);
                 data.Flush();
                 data.Close();
+                WriteLog("   - Create: " + user.firstname + " - " + user.lastname);
             }
 
             // Web Response
@@ -147,11 +152,11 @@ namespace ZammadDatabaseUpdate
             {
                 response = (HttpWebResponse)request.GetResponse();
                 StreamReader stream = new StreamReader(response.GetResponseStream());
-                Result.Text += "\r\n" + stream.ReadToEnd();
+                WriteLog(stream.ReadToEnd());
                 stream.Close();
                 response.Close();
             }
-            catch (Exception ex) { Result.Text += "\r\n" + ex.Message; if (response != null) response.Close(); }
+            catch (Exception ex) { WriteLog("Error: " + user.firstname + " - " + user.lastname + " - " + ex.Message + "\r\n   - " + user.support_level + " - " + user.support); if (response != null) response.Close(); }
         }
     }
 }
