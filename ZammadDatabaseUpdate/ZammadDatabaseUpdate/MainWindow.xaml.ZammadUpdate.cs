@@ -91,7 +91,6 @@ namespace ZammadDatabaseUpdate
                 string json = "{" +
                     "\"firstname\": \""+user.firstname+"\"," +
                     "\"lastname\": \""+user.lastname+"\"," +
-                    "\"email\": \"" + user.firstname.Replace(' ', '_') + "@" + user.firstname.Replace(' ', '_') + ".com\"," +
                     "\"support_level\": \"" +user.support_level+"\"," +
                     "\"support\": \""+user.support+"\"" +
                     "}";
