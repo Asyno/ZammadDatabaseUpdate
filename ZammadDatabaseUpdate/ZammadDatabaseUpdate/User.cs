@@ -25,5 +25,7 @@ namespace ZammadDatabaseUpdate
 
         [DataMember(Name = "product")]
         internal string product { get; set; }
+
+        internal bool exist { get; set; }
     }
 }

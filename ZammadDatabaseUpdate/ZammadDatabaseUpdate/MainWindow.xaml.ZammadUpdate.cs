@@ -18,33 +18,40 @@ namespace ZammadDatabaseUpdate
         /// </summary>
         private void UserUpdate()
         {
+            List<User> ZammadUsers = GetZammadUsers();
             foreach(User user in ExcelUser)
             {
                 bool isDouble = false;
 
-                foreach (User ZammadUser in GetZammadUsers())
+                foreach (User ZammadUser in ZammadUsers)
                 {
                     Debug.WriteLine("__ Vergleich __");
                     if (user.firstname == ZammadUser.firstname && user.lastname == ZammadUser.lastname)
                     {
                         isDouble = true;
                         user.id = ZammadUser.id;
+                        ZammadUser.exist = true;
                         break;
                     }
                 }
                 Debug.WriteLine("__ Upload __");
 
                 if (isDouble)
-            {
-                Debug.WriteLine("__ Update __");
-                UpdateZammadUser(user);
+                {
+                    Debug.WriteLine("__ Update __");
+                    UpdateZammadUser(user);
+                }
+                else
+                {
+                    Debug.WriteLine("__ Create __");
+                    CreateZammadUser(user);
+                }
             }
-            else
-            {
-                Debug.WriteLine("__ Create __");
-                CreateZammadUser(user);
-            }
-          }
+
+            // Delete old User
+            foreach (User user in ZammadUsers)
+                if (!user.exist)
+                    DeleteZammadUser(user);
         }
 
         /// <summary>
@@ -159,6 +166,38 @@ namespace ZammadDatabaseUpdate
                 "Email: " + user.firstname.Replace(' ', '_') + "@" + user.firstname.Replace(' ', '_') + ".com\r\n   - " +
                 "Support Level: " + user.support_level + "\r\n   - " + 
                 "Support: " + user.support); if (response != null) response.Close(); }
+        }
+
+        /// <summary>
+        /// Delete an existing Zammad User
+        /// </summary>
+        /// <param name="user"></param>
+        private void DeleteZammadUser(User user)
+        {
+            // Web Request
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ZammadURL + "/" + user.id);
+            request.ContentType = "application/json";
+            string authInfo = ZammadLogin;
+            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
+            request.Headers["Authorization"] = "Basic " + authInfo;
+            request.Method = "DELETE";
+            
+
+            // Web Response
+            HttpWebResponse response = null;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+                StreamReader stream = new StreamReader(response.GetResponseStream());
+                WriteLog(stream.ReadToEnd());
+                stream.Close();
+                response.Close();
+            }
+            catch (Exception ex)
+            {
+                WriteLog("Error: " + user.firstname + " - " + user.lastname + " - " + ex.Message + "\r\n   - " + user.support_level + " - " + user.support);
+                if (response != null) response.Close();
+            }
         }
     }
 }
