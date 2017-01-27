@@ -20,5 +20,15 @@ namespace ZammadDatabaseUpdate
             sw.WriteLine(message);
             sw.Close();
         }
+
+        /// <summary>
+        /// Creats a new Logfile, overwrite it if it already exist
+        /// </summary>
+        public void NewLog()
+        {
+            // Create the Logfile Text
+            FileStream Logfile = new FileStream(Path, FileMode.Create);
+            Logfile.Close();
+        }
     }
 }

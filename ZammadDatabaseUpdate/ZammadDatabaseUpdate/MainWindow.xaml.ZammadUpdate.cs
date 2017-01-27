@@ -11,7 +11,7 @@ namespace ZammadDatabaseUpdate
     partial class MainWindow
     {
         private string ZammadLogin = "jan.benten@connectedguests.com:connectedguests2016";
-        private string ZammadURL = "http://192.168.230.111:3000/api/v1/users";
+        private string ZammadURL = "http://192.168.230.250:3000/api/v1/users";
 
         /// <summary>
         /// Start the process to Update the User at Zammad
@@ -133,7 +133,7 @@ namespace ZammadDatabaseUpdate
                 string json = "{" +
                     "\"firstname\": \"" + user.firstname + "\"," +
                     "\"lastname\": \"" + user.lastname + "\"," +
-                    "\"email\": \"" + user.firstname.Replace(' ', '_') + "@"+ user.firstname.Replace(' ', '_')  + ".com\"," +
+                    "\"email\": \"" + user.firstname.Replace(' ', '_') + "@"+ user.id.Replace(' ', '_')  + ".com\"," +
                     "\"support_level\": \"" + user.support_level + "\"," +
                     "\"support\": \"" + user.support + "\"," +
                     "\"active\": \"true\"," +
@@ -155,7 +155,10 @@ namespace ZammadDatabaseUpdate
                 stream.Close();
                 response.Close();
             }
-            catch (Exception ex) { WriteLog("Error: " + user.firstname + " - " + user.lastname + " - " + ex.Message + "\r\n   - " + user.support_level + " - " + user.support); if (response != null) response.Close(); }
+            catch (Exception ex) { WriteLog("Error: " + user.firstname + " - " + user.lastname + " - " + ex.Message + "\r\n   - " +
+                "Email: " + user.firstname.Replace(' ', '_') + "@" + user.firstname.Replace(' ', '_') + ".com\r\n   - " +
+                "Support Level: " + user.support_level + "\r\n   - " + 
+                "Support: " + user.support); if (response != null) response.Close(); }
         }
     }
 }

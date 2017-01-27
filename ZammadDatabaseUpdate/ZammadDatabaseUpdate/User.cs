@@ -24,6 +24,6 @@ namespace ZammadDatabaseUpdate
         internal string support { get; set; }
 
         [DataMember(Name = "product")]
-        internal string prduct { get; set; }
+        internal string product { get; set; }
     }
 }

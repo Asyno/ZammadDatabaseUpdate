@@ -21,22 +21,25 @@ namespace ZammadDatabaseUpdate
         /// <param name="e"></param>
         private void btn_update_Click(object sender, RoutedEventArgs e)
         {
-            // Create the Logfile Text
-            FileStream Logfile = new FileStream(Path, FileMode.Create);
-            Logfile.Close();
-
+            NewLog();
             DateTime date = DateTime.Now;
             WriteLog("Start Database update - " + date.ToString());
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Start reading the database Excel...");
-            ReadExcelDB();
+            ReadExcelDB();      // Reading the Excel
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Finish reading the database Excel");
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Start updating the Zammad database...");
-            UserUpdate();
+            UserUpdate();       // Updating Zammad DB
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Finish updating the Zammad database");
+        }
+
+        private void btn_debugExcel_Click(object sender, RoutedEventArgs e)
+        {
+            NewLog();
+            DEBUG_ReadExcel();
         }
     }
 }
