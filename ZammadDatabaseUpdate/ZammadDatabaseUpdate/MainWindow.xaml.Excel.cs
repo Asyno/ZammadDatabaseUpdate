@@ -66,8 +66,8 @@ namespace ZammadDatabaseUpdate
                                         " | Comment: " + line.ItemArray[20] as string + "\u003c/div\u003e";
                                 user.support += support;
                                 i++;
-                                if (i >= 5) break;
                             }
+                            if (i >= 5) break;
                         }
                     }
                 }
@@ -111,13 +111,14 @@ namespace ZammadDatabaseUpdate
                         {
                             User user = new User();
                             user.id = "" + sheet1.Rows[i].ItemArray[0] as string;
-                            user.firstname = "" + sheet1.Rows[i].ItemArray[1] as string;
-                            user.lastname = "" + sheet1.Rows[i].ItemArray[5] as string;
+                            user.firstname = ("" + sheet1.Rows[i].ItemArray[1] as string).Trim(' ');
+                            user.lastname = ("" + sheet1.Rows[i].ItemArray[5] as string).Trim(' ');
                             user.support_level = "" + sheet1.Rows[i].ItemArray[12] as string;
                             user.product = "" + sheet1.Rows[i].ItemArray[4] as string;
                             user.support = "Last Update: " + DateTime.Now.ToShortDateString() +
                                 "\u003cdiv\u003eDebitor: " + user.id + "\u003c/div\u003e" +
-                                "\u003cdiv\u003eCountry: " + sheet1.Rows[i].ItemArray[9] as string + "\u003c/div\u003e";
+                                "\u003cdiv\u003eCountry: " + sheet1.Rows[i].ItemArray[9] as string + "\u003c/div\u003e" +
+                                "\u003cdiv\u003eProduct: " + user.product as string + "\u003c/div\u003e";
                             ExcelUser.Add(user);
                         }
                     }
@@ -131,20 +132,17 @@ namespace ZammadDatabaseUpdate
                     adapter.Fill(sheet1);
                     foreach(User user in ExcelUser)
                     {
-                        foreach(DataRow line in sheet1.Rows)
+                        int i = 0;
+                        foreach (DataRow line in sheet1.Rows)
                         {
-                            int i = 0;
-                            if (user.id == line.ItemArray[3] as string && user.firstname == line.ItemArray[10] as string)
+                            if (user.id == line.ItemArray[3] as string)
                             {
-                                if (user.id == line.ItemArray[3] as string)
-                                {
-                                    string support = "\u003cdiv\u003ePayment: " + line.ItemArray[24] as string +
-                                            " | Comment: " + line.ItemArray[20] as string + "\u003c/div\u003e";
-                                    user.support += support;
-                                    i++;
-                                    if (i >= 5) break;
-                                }
+                                string support = "\u003cdiv\u003ePayment: " + line.ItemArray[24] as string +
+                                        " | Comment: " + line.ItemArray[20] as string + "\u003c/div\u003e";
+                                user.support += support;
+                                i++;
                             }
+                            if (i >= 5) break;
                         }
                     }
                 }

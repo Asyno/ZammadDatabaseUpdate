@@ -96,10 +96,10 @@ namespace ZammadDatabaseUpdate
             using (StreamWriter data = new StreamWriter(request.GetRequestStream()))
             {
                 string json = "{" +
-                    "\"firstname\": \""+user.firstname+"\"," +
-                    "\"lastname\": \""+user.lastname+"\"," +
-                    "\"support_level\": \"" +user.support_level+"\"," +
-                    "\"support\": \""+user.support+"\"" +
+                    "\"firstname\": \"" + user.firstname.Replace('"', ' ') + "\"," +
+                    "\"lastname\": \"" + user.lastname.Replace('"', ' ') + "\"," +
+                    "\"support_level\": \"" + user.support_level.Replace('"', ' ') + "\"," +
+                    "\"support\": \"" + user.support.Replace('"', '\'') + "\"" +
                     "}";
                 data.Write(json);
                 data.Flush();
@@ -138,11 +138,11 @@ namespace ZammadDatabaseUpdate
             using (StreamWriter data = new StreamWriter(request.GetRequestStream()))
             {
                 string json = "{" +
-                    "\"firstname\": \"" + user.firstname + "\"," +
-                    "\"lastname\": \"" + user.lastname + "\"," +
-                    "\"email\": \"" + user.firstname.Replace(' ', '_') + "@"+ user.id.Replace(' ', '_')  + ".com\"," +
-                    "\"support_level\": \"" + user.support_level + "\"," +
-                    "\"support\": \"" + user.support + "\"," +
+                    "\"firstname\": \"" + user.firstname.Replace('"', ' ') + "\"," +
+                    "\"lastname\": \"" + user.lastname.Replace('"', ' ') + "\"," +
+                    "\"email\": \"" + user.firstname.Replace(' ', '_') + "@"+ user.id.Replace(' ', '_').Replace('"', ' ') + ".com\"," +
+                    "\"support_level\": \"" + user.support_level.Replace('"', ' ') + "\"," +
+                    "\"support\": \"" + user.support.Replace('"', ' ') + "\"," +
                     "\"active\": \"true\"," +
                     "\"role_ids\": \"3\"" +
                     "}";
