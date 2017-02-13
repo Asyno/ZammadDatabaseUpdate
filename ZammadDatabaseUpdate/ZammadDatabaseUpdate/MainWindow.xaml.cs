@@ -24,22 +24,33 @@ namespace ZammadDatabaseUpdate
             NewLog();
             DateTime date = DateTime.Now;
             WriteLog("Start Database update - " + date.ToString());
+            WriteMonitor("Start Database update - " + date.ToString());
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Start reading the database Excel...");
+            WriteMonitor(date.ToShortTimeString() + " - Start reading the database Excel...");
             ReadExcelDB();      // Reading the Excel
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Finish reading the database Excel");
+            WriteMonitor(date.ToShortTimeString() + " - Finish reading the database Excel");
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Start updating the Zammad database...");
+            WriteMonitor(date.ToShortTimeString() + " - Start updating the Zammad database...");
             UserUpdate();       // Updating Zammad DB
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Finish updating the Zammad database");
+            WriteMonitor(date.ToShortTimeString() + " - Finish updating the Zammad database");
         }
 
         private void btn_debugExcel_Click(object sender, RoutedEventArgs e)
         {
             NewLog();
             DEBUG_ReadExcel();
+        }
+
+        private void btn_debugUpload_Click(object sender, RoutedEventArgs e)
+        {
+            User user = new User { email="jan.benten@connectedguests.com" };
+            SearchZammadUser(user);
         }
     }
 }

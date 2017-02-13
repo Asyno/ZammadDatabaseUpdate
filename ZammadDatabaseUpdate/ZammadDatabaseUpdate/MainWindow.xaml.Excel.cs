@@ -40,10 +40,12 @@ namespace ZammadDatabaseUpdate
                             user.id = "" + sheet1.Rows[i].ItemArray[0] as string;
                             user.firstname = "" + sheet1.Rows[i].ItemArray[1] as string;
                             user.lastname = "" + sheet1.Rows[i].ItemArray[5] as string;
+                            // replace ' ', '(', ')', ',' for the email adress.
+                            user.email = (user.firstname + "@" + user.id + ".com").Replace(' ', '_').Replace('(', '_').Replace(')', '_').Replace(',', '_').Replace('+', '_').ToLower();
                             user.support_level = "" + sheet1.Rows[i].ItemArray[12] as string;
                             user.product = "" + sheet1.Rows[i].ItemArray[4] as string;
                             user.support = "Last Update: " + DateTime.Now.ToShortDateString() +
-                                "\u003cdiv\u003eDebitor: " + user.id + "\u003c/div\u003e" +
+                                "\u003cdiv\u003e\u003cstrong\u003eDebitor:\u003c/strong\u003e " + user.id + "\u003c/div\u003e" +
                                 "\u003cdiv\u003eCountry: " + sheet1.Rows[i].ItemArray[9] as string + "\u003c/div\u003e";
                             ExcelUser.Add(user);
                         }
@@ -78,9 +80,10 @@ namespace ZammadDatabaseUpdate
                         "User ID: " + user.id + "\r\n" +
                         "User Firstname: " + user.firstname + "\r\n" +
                         "User Lastname: " + user.lastname + "\r\n" +
+                        "User E-Mail: " + user.email + "\r\n" +
                         "User Product: " + user.product + "\r\n" +
                         "User Support Level: " + user.support_level + "\r\n" +
-                        "User Support: " + user.support
+                        "User Support: " + user.support + "\r\n"
                         );
             }
         }
@@ -113,12 +116,18 @@ namespace ZammadDatabaseUpdate
                             user.id = "" + sheet1.Rows[i].ItemArray[0] as string;
                             user.firstname = ("" + sheet1.Rows[i].ItemArray[1] as string).Trim(' ');
                             user.lastname = ("" + sheet1.Rows[i].ItemArray[5] as string).Trim(' ');
+                            // replace ' ', '(', ')', ',' for the email adress.
+                            user.email = (user.firstname + "@" + user.id + ".com").Replace(' ', '_').Replace('(', '_').Replace(')', '_').Replace(',', '_').Replace('+', '_').ToLower();
                             user.support_level = "" + sheet1.Rows[i].ItemArray[12] as string;
                             user.product = "" + sheet1.Rows[i].ItemArray[4] as string;
-                            user.support = "Last Update: " + DateTime.Now.ToShortDateString() +
-                                "\u003cdiv\u003eDebitor: " + user.id + "\u003c/div\u003e" +
-                                "\u003cdiv\u003eCountry: " + sheet1.Rows[i].ItemArray[9] as string + "\u003c/div\u003e" +
-                                "\u003cdiv\u003eProduct: " + user.product as string + "\u003c/div\u003e";
+                            user.support = "\u003cdiv\u003e\u003cstrong\u003eLast Update:\u003c/strong\u003e " + DateTime.Now.ToShortDateString() + "\u003c/div\u003e" +
+                                "\u003cdiv\u003e\u003cstrong\u003eDebitor:\u003c/strong\u003e ";
+                            // mark the id as red if it contains "Pay per call"
+                            if (user.id.IndexOf("pay per call", StringComparison.OrdinalIgnoreCase) >= 0) user.support += "\u003cspan style=\"color:red;\"\u003e" + user.id + "\u003c/span\u003e";
+                            else user.support += user.id;
+                            user.support += "\u003c/div\u003e" +
+                                "\u003cdiv\u003e\u003cstrong\u003eCountry:\u003c/strong\u003e " + sheet1.Rows[i].ItemArray[9] as string + "\u003c/div\u003e" +
+                                "\u003cdiv\u003e\u003cstrong\u003eProduct:\u003c/strong\u003e " + user.product as string + "\u003c/div\u003e";
                             ExcelUser.Add(user);
                         }
                     }
@@ -137,8 +146,12 @@ namespace ZammadDatabaseUpdate
                         {
                             if (user.id == line.ItemArray[3] as string)
                             {
-                                string support = "\u003cdiv\u003ePayment: " + line.ItemArray[24] as string +
-                                        " | Comment: " + line.ItemArray[20] as string + "\u003c/div\u003e";
+                                string support = "\u003cdiv\u003e\u003cstrong\u003ePayment:\u003c/strong\u003e ";
+                                // mark the payment status as green or red if it contains open or paid
+                                if ((line.ItemArray[24] as string).Contains("open")) support += "\u003cspan style=\"color:red;\"\u003e" + line.ItemArray[24] as string + "\u003c/span\u003e";
+                                else if (line.ItemArray[24] as string == "paid") support += "\u003cspan style=\"color:green;\"\u003e" + line.ItemArray[24] as string + "\u003c/span\u003e";
+                                else support += line.ItemArray[24] as string;
+                                support += " | \u003cstrong\u003eComment:\u003c/strong\u003e " + line.ItemArray[20] as string + "\u003c/div\u003e";
                                 user.support += support;
                                 i++;
                             }

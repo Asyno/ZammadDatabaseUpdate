@@ -13,12 +13,23 @@ namespace ZammadDatabaseUpdate
         public void WriteLog(string message)
         {
             // entry at the log monitor
-            Result.Text += "\r\n" + message;
+            // too many recources?
+            //Result.Text += "\r\n" + message;
 
             // entry to the Logfile
             StreamWriter sw = new StreamWriter(Path,true);
             sw.WriteLine(message);
             sw.Close();
+        }
+
+        /// <summary>
+        /// Shows a new message at the Log monitor
+        /// </summary>
+        /// <param name="message"></param>
+        public void WriteMonitor(string message)
+        {
+            // entry at the log monitor
+            Result.Text += "\r\n" + message;
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace ZammadDatabaseUpdate
     {
         [DataMember(Name = "id")]
         internal string id { get; set; }
-        
+
         [DataMember(Name = "firstname")]
         internal string firstname { get; set; }
 
@@ -26,6 +26,7 @@ namespace ZammadDatabaseUpdate
         [DataMember(Name = "product")]
         internal string product { get; set; }
 
-        internal bool exist { get; set; }
+        [DataMember(Name = "email")]
+        internal string email { get; set; }
     }
 }

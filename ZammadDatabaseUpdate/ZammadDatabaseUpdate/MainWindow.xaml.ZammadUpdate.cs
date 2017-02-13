@@ -11,47 +11,25 @@ namespace ZammadDatabaseUpdate
     partial class MainWindow
     {
         private string ZammadLogin = "jan.benten@connectedguests.com:connectedguests2016";
-        private string ZammadURL = "http://192.168.230.250:3000/api/v1/users";
+        //private string ZammadURL = "http://192.168.230.250:3000/api/v1/users";
+        private string ZammadURL = "http://94.222.214.98:3000/api/v1/users";
 
         /// <summary>
         /// Start the process to Update the User at Zammad
         /// </summary>
         private void UserUpdate()
         {
-            List<User> ZammadUsers = GetZammadUsers();
             foreach(User user in ExcelUser)
             {
-                bool isDouble = false;
-
-                foreach (User ZammadUser in ZammadUsers)
+                string userID = SearchZammadUser(user); // Check if the User with the same email already exist
+                if (userID != null)                     // if the user exist, take the id to 'user' and update
                 {
-                    Debug.WriteLine("__ Vergleich __");
-                    if (user.firstname == ZammadUser.firstname && user.lastname == ZammadUser.lastname)
-                    {
-                        isDouble = true;
-                        user.id = ZammadUser.id;
-                        ZammadUser.exist = true;
-                        break;
-                    }
-                }
-                Debug.WriteLine("__ Upload __");
-
-                if (isDouble)
-                {
-                    Debug.WriteLine("__ Update __");
+                    user.id = userID;
                     UpdateZammadUser(user);
                 }
-                else
-                {
-                    Debug.WriteLine("__ Create __");
+                else                                    // else, create the user
                     CreateZammadUser(user);
-                }
             }
-
-            // Delete old User
-            foreach (User user in ZammadUsers)
-                if (!user.exist)
-                    DeleteZammadUser(user);
         }
 
         /// <summary>
@@ -140,7 +118,7 @@ namespace ZammadDatabaseUpdate
                 string json = "{" +
                     "\"firstname\": \"" + user.firstname.Replace('"', ' ') + "\"," +
                     "\"lastname\": \"" + user.lastname.Replace('"', ' ') + "\"," +
-                    "\"email\": \"" + user.firstname.Replace(' ', '_') + "@"+ user.id.Replace(' ', '_').Replace('"', ' ') + ".com\"," +
+                    "\"email\": \"" + user.email + "\"," +
                     "\"support_level\": \"" + user.support_level.Replace('"', ' ') + "\"," +
                     "\"support\": \"" + user.support.Replace('"', ' ') + "\"," +
                     "\"active\": \"true\"," +
@@ -163,7 +141,7 @@ namespace ZammadDatabaseUpdate
                 response.Close();
             }
             catch (Exception ex) { WriteLog("Error: " + user.firstname + " - " + user.lastname + " - " + ex.Message + "\r\n   - " +
-                "Email: " + user.firstname.Replace(' ', '_') + "@" + user.firstname.Replace(' ', '_') + ".com\r\n   - " +
+                "Email: " + user.email + "\r\n   - " +
                 "Support Level: " + user.support_level + "\r\n   - " + 
                 "Support: " + user.support); if (response != null) response.Close(); }
         }
@@ -198,6 +176,42 @@ namespace ZammadDatabaseUpdate
                 WriteLog("Error: " + user.firstname + " - " + user.lastname + " - " + ex.Message + "\r\n   - " + user.support_level + " - " + user.support);
                 if (response != null) response.Close();
             }
+        }
+
+        /// <summary>
+        /// Methode to search for a user by the email addres
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>returns the User id or NULL is no user was found</returns>
+        private string SearchZammadUser(User user)
+        {
+            // Web Request
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ZammadURL + "/search?query=" + user.email);
+            request.ContentType = "application/json";
+            string authInfo = ZammadLogin;
+            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
+            request.Headers["Authorization"] = "Basic " + authInfo;
+            request.Method = "GET";
+
+
+            // Web Response
+            HttpWebResponse response = null;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+                DataContractJsonSerializer json = new DataContractJsonSerializer(typeof(List<User>));
+                List<User> jsonResponse = (List<User>)json.ReadObject(response.GetResponseStream());
+                response.Close();
+
+                if(jsonResponse.Count > 0)
+                    return jsonResponse[0].id;
+            }
+            catch (Exception ex)
+            {
+                WriteLog("Error: " + user.firstname + " - " + user.lastname + " - " + ex.Message + "\r\n   - " + user.support_level + " - " + user.support);
+                if (response != null) response.Close();
+            }
+            return null;
         }
     }
 }
