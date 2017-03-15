@@ -65,6 +65,7 @@ namespace ZammadDatabaseUpdate
                             if (user.id == line.ItemArray[3] as string)
                             {
                                 string support = "\u003cdiv\u003ePayment: " + line.ItemArray[24] as string +
+                                        " | Due Date: " + line.ItemArray[23] as string +
                                         " | Comment: " + line.ItemArray[20] as string + "\u003c/div\u003e";
                                 user.support += support;
                                 i++;
@@ -148,7 +149,13 @@ namespace ZammadDatabaseUpdate
                             {
                                 string support = "\u003cdiv\u003e\u003cstrong\u003ePayment:\u003c/strong\u003e ";
                                 // mark the payment status as green or red if it contains open or paid
-                                if ((line.ItemArray[24] as string).Contains("open")) support += "\u003cspan style=\"color:red;\"\u003e" + line.ItemArray[24] as string + "\u003c/span\u003e";
+                                if ((line.ItemArray[24] as string).Contains("open"))
+                                {
+                                    support += "\u003cspan style=\"color:red;\"\u003e" + line.ItemArray[24] as string + "\u003c/span\u003e";
+                                    // if payment is open, show Due date
+                                    if (!string.IsNullOrWhiteSpace(line.ItemArray[23] as string))
+                                        support += " | \u003cstrong\u003eDue Date:\u003c/strong\u003e " + line.ItemArray[23] as string;
+                                }
                                 else if (line.ItemArray[24] as string == "paid") support += "\u003cspan style=\"color:green;\"\u003e" + line.ItemArray[24] as string + "\u003c/span\u003e";
                                 else support += line.ItemArray[24] as string;
                                 support += " | \u003cstrong\u003eComment:\u003c/strong\u003e " + line.ItemArray[20] as string + "\u003c/div\u003e";

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
@@ -11,8 +10,7 @@ namespace ZammadDatabaseUpdate
     partial class MainWindow
     {
         private string ZammadLogin = "jan.benten@connectedguests.com:connectedguests2016";
-        //private string ZammadURL = "http://192.168.230.250:3000/api/v1/users";
-        private string ZammadURL = "http://94.222.214.98:3000/api/v1/users";
+        private string ZammadURL = ":3000/api/v1/users";
 
         /// <summary>
         /// Start the process to Update the User at Zammad
@@ -39,7 +37,7 @@ namespace ZammadDatabaseUpdate
         private List<User> GetZammadUsers()
         {
             // Web Request
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ZammadURL);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(TextURLZammad.Text + ZammadURL);
             request.ContentType = "application/json";
             string authInfo = ZammadLogin;
             authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
@@ -64,7 +62,7 @@ namespace ZammadDatabaseUpdate
         private void UpdateZammadUser(User user)
         {
             // Web Request
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ZammadURL + "/" + user.id);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(TextURLZammad.Text + ZammadURL + "/" + user.id);
             request.ContentType = "application/json";
             string authInfo = ZammadLogin;
             authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
@@ -106,7 +104,7 @@ namespace ZammadDatabaseUpdate
         private void CreateZammadUser(User user)
         {
             // Web Request
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ZammadURL);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(TextURLZammad.Text + ZammadURL);
             request.ContentType = "application/json";
             string authInfo = ZammadLogin;
             authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
@@ -153,7 +151,7 @@ namespace ZammadDatabaseUpdate
         private void DeleteZammadUser(User user)
         {
             // Web Request
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ZammadURL + "/" + user.id);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(TextURLZammad.Text + ZammadURL + "/" + user.id);
             request.ContentType = "application/json";
             string authInfo = ZammadLogin;
             authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
@@ -186,7 +184,7 @@ namespace ZammadDatabaseUpdate
         private string SearchZammadUser(User user)
         {
             // Web Request
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ZammadURL + "/search?query=" + user.email);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(TextURLZammad.Text + ZammadURL + "/search?query=" + user.email);
             request.ContentType = "application/json";
             string authInfo = ZammadLogin;
             authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
