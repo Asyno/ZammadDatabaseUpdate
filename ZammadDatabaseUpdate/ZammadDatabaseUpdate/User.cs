@@ -28,5 +28,8 @@ namespace ZammadDatabaseUpdate
 
         [DataMember(Name = "email")]
         internal string email { get; set; }
+
+        [DataMember(Name = "install")]
+        internal string install { get; set; }
     }
 }

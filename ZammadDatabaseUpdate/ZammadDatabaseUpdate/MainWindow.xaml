@@ -14,7 +14,7 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <TextBox Name="Result" Text="Logfile:" />
-        <TextBlock Grid.Row="1" Name="TextURLZammad" Text="http://192.168.230.250" />
+        <TextBlock Grid.Row="1" Name="TextURLZammad" Text="http://192.168.230.112" />
         <Button Grid.Row="2" Name="btn_debugExcel" Click="btn_debugExcel_Click" Content="DEBUG - Read Excel" />
         <Button Grid.Row="3" Name="btn_updateBob" Click="btn_update_Click" Content="Update Database" />
     </Grid>

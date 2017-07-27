@@ -29,14 +29,14 @@ namespace ZammadDatabaseUpdate
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Start reading the database Excel...");
             WriteMonitor(date.ToShortTimeString() + " - Start reading the database Excel...");
-            ReadExcelDB();      // Reading the Excel
+            ReadSAP();      // Reading the SAP csv
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Finish reading the database Excel");
             WriteMonitor(date.ToShortTimeString() + " - Finish reading the database Excel");
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Start updating the Zammad database...");
             WriteMonitor(date.ToShortTimeString() + " - Start updating the Zammad database...");
-            UserUpdate();       // Updating Zammad DB
+            UserUpdateSAP();       // Updating Zammad DB
             date = DateTime.Now;
             WriteLog(date.ToShortTimeString() + " - Finish updating the Zammad database");
             WriteMonitor(date.ToShortTimeString() + " - Finish updating the Zammad database");
